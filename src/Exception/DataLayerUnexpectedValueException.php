@@ -13,5 +13,5 @@ namespace MagmaDataLayer\Exception;
 
 use UnexpectedValueException;
 
-class DataLayerUnexpectedValueException implements UnexpectedValueException
+class DataLayerUnexpectedValueException extends UnexpectedValueException
 {}

@@ -13,5 +13,5 @@ namespace MagmaDataLayer\Exception;
 
 use InvalidArgumentException;
 
-class DataLayerInvalidArgumentException implements InvalidArgumentException
+class DataLayerInvalidArgumentException extends InvalidArgumentException
 {}

@@ -44,9 +44,10 @@ final class DataLayerFacade
     public function __construct(string $tableSchema, string $tableSchemaID, ?array $dataLayerConfiguration = null)
     {
         $dataLayerEnvironment = new DataLayerEnvironment(new DataLayerConfiguration(($dataLayerConfiguration !=null) ? $dataLayerConfiguration : (new DataLayerConfiguration())->baseConfiguration()));
+        
         $factory = new DataLayerFactory($dataLayerEnvironment, $tableSchema, $tableSchemaID);
         if ($factory) {
-            return $factory->initialize();
+            return $factory->build();
         }
 
     }

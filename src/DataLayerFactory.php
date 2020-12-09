@@ -46,22 +46,22 @@ class DataLayerFactory
     }
 
     /**
-     * initialize method which glues all the components together and inject the necessary 
+     * build method which glues all the components together and inject the necessary 
      * dependency within the respective object
      *
      * @return Object
      */
-    public function initialize() : Object
+    public function build() : Object
     {
-        /* Initialize the data mapper factory object */
+        /* build the data mapper factory object */
         $dataMapperFactory = new DataMapperFactory();
         $dataMapper = $dataMapperFactory->create(DatabaseConnection::class, $this->environment);
         if ($dataMapper) {
-            /* Initialize the query builder factory object */
+            /* build the query builder factory object */
             $queryBuilderFactory = new QueryBuilderFactory();
             $queryBuilder = $queryBuilderFactory->create(QueryBuilder::class);
             if ($queryBuilder) {
-                /* Initialize the entity manager factory object */
+                /* build the entity manager factory object */
                 $entityManagerFactory = new EntityManagerFactory($dataMapper, $queryBuilder);
                 return $entityManagerFactory->create(Crud::class, $this->tableSchema, $this->tableSchemaID);
             }

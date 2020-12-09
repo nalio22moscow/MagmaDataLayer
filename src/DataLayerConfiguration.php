@@ -18,20 +18,34 @@ class DataLayerConfiguration
     {
         return [
 
-            'default' => 'mysql',
-
             'driver' => [
 
                 'mysql' => [
-                    'dsn' => 'mysql:host=localhost;port=3306;dbname=framework;charset=utf8mb4',
+                    'dsn' => 'mysql:host=localhost;dbname=lavacms;charset=utf8mb4',
+                    'host' => 'localhost',
+                    'database' => 'lavacms',
                     'username' => 'root',
-                    'password' => ''
+                    'password' => '',
+                    'port' => 3306,
+                    'charset' => 'utf8mb4',
+                    'collate' => 'utf8mb4_unicode_ci',
+                    'prefix' => '',
+                    'engine' => 'InnoDB',
+                    'row_format' => 'dynamic'
                 ],
 
                 'pgsql' => [
-                    'dsn' => 'pgsql:host=localhost;port=3306;dbname=framework;charset=utf8mb4',
+                    'dsn' => 'mysql:host=localhost;dbname=lavacms;charset=utf8mb4',
+                    'host' => 'lavacms',
+                    'database' => 'framework',
                     'username' => 'root',
-                    'password' => ''
+                    'password' => '',
+                    'port' => 3306,
+                    'charset' => 'utf8mb4',
+                    'collate' => 'utf8mb4_unicode_ci',
+                    'prefix' => '',
+                    'engine' => 'InnoDB',
+                    'row_format' => 'dynamic'
                 ]
 
             ]

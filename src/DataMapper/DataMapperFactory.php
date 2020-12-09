@@ -28,21 +28,17 @@ class DataMapperFactory
 
     /**
      * Creates the data mapper object and inject the dependency for this object. We are also
-     * creating the DatabaseConnection Object
-     * $dataMapperEnvironmentConfiguration get instantiated in the DataRepositoryFactory
+     * creating the DatabaseConnection Object and injecting the environment object. Which will
+     * expose the environment methods with the database connection class.
      *
      * @param string $databaseConnectionString
      * @param Object $dataMapperEnvironmentConfiguration
      * @return DataMapperInterface
-     * @throws BaseUnexpectedValueException
+     * @throws DataLayerUnexpectedValueException
      */
     public function create(string $databaseConnectionString, Object $environment) : DataMapperInterface
     {
-        // Create databaseConnection Object and pass the database credentials in
-        $defaultDriver = (new DataLayerConfiguration())['default']; /* Get the database default driver */
-        $credentials = $environment->getDatabaseCredentials($defaultDriver);
-        $databaseConnectionObject = new $databaseConnectionString($credentials);
-        
+        $databaseConnectionObject = new $databaseConnectionString($environment);
         if (!$databaseConnectionObject instanceof DatabaseConnectionInterface) {
             throw new DataLayerUnexpectedValueException($databaseConnectionString . ' is not a valid database connection object');
         }

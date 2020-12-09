@@ -13,7 +13,9 @@ namespace MagmaDataLayer\DataRepository;
 
 use MagmaDataLayer\Exception\DataLayerUnexpectedValueException;
 use MagmaDataLayer\DataRepository\DataRepositoryInterface;
-use MagmaDataLayer\DataLayerFacade;
+use MagmaDataLayer\DataLayerEnvironment;
+use MagmaDataLayer\DataLayerConfiguration;
+use MagmaDataLayer\DataLayerFactory;
 
 class DataRepositoryFactory
 {
@@ -46,19 +48,38 @@ class DataRepositoryFactory
      * the application using this framework. The data repository object will have 
      * the required dependency injected by default. Which is the data layer facade object
      * which is simple passing in the entity manager object which expose the crud methods
-     * 
+     *
      * @param string $dataRepositoryString
-     * @return void
+     * @param array|null $dataLayerConfiguration
+     * @return DataRepositoryInterface
      * @throws DataLayerUnexpectedValueException
      */
-    public function create(string $dataRepositoryString) : DataRepositoryInterface
+    public function create(string $dataRepositoryString, ?array $dataLayerConfiguration = null) : DataRepositoryInterface
     {
         
-        $dataRepositoryObject = new $dataRepositoryString(new DataLayerFacade($this->tableSchema,$this->tableSchemaID));
+        $dataRepositoryObject = new $dataRepositoryString($this->entityBuilder($dataLayerConfiguration));
         if (!$dataRepositoryObject instanceof DataRepositoryInterface) {
             throw new DataLayerUnexpectedValueException($dataRepositoryString . ' is not a valid repository object');
         }
         return $dataRepositoryObject;
     }
+
+    /**
+     * Undocumented function
+     *
+     * @param array|null $dataLayerConfiguration
+     * @return Object
+     */
+    public function entityBuilder(?array $dataLayerConfiguration = null) : Object
+    {
+        $dataLayerEnvironment = new DataLayerEnvironment(new DataLayerConfiguration(($dataLayerConfiguration !=null) ? $dataLayerConfiguration : (new DataLayerConfiguration())->baseConfiguration()));
+        
+        $factory = new DataLayerFactory($dataLayerEnvironment, $this->tableSchema, $this->tableSchemaID);
+        if ($factory) {
+            return $factory->build();
+        }
+
+    }
+
 
 }

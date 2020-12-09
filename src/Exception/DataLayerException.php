@@ -13,5 +13,5 @@ namespace MagmaDataLayer\Exception;
 
 use Exception;
 
-class DataLayerException implements Exception
+class DataLayerException extends Exception
 {}

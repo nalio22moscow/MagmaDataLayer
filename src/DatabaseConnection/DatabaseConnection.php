@@ -19,16 +19,15 @@ class DatabaseConnection implements DatabaseConnectionInterface
 {
 
     /** @var array */
-    protected array $credentials;
+    protected ?Object $credential = null;
 
     /** @var PDO */
     protected PDO $dbh;
 
     /** */
-    public function __construct(array $credentials)
+    public function __construct(?Object $credential = null)
     {
-        if ($this->credentials)
-            $this->credentials = $credentials;
+        $this->credential = $credential;
     }
 
     /**
@@ -47,9 +46,9 @@ class DatabaseConnection implements DatabaseConnectionInterface
                 PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
             ];
             $this->dbh = new PDO(
-                $this->credentials['dsn'],
-                $this->credentials['username'],
-                $this->credentials['password'],
+                $this->credential->getDsn(),
+                $this->credential->getDbUsername(),
+                $this->credential->getDbPassword(),
                 $params
             );
         } catch(PDOException $expection) {

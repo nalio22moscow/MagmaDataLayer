@@ -20,28 +20,32 @@ class DataLayerEnvironment
     /** @var DataLayerConfiguration */
     protected DataLayerConfiguration $environmentConfiguration;
 
+    /** @var string */
+    protected const VERSION = '1.0.0';
+
+    /** @var string */
+    protected const DEFAULT_DRIVER = 'mysql';
+
     /**
      * Main construct class
      * 
      * @param array $credentials
      * @return void
      */
-    public function __construct(DataLayerConfiguration $environmentConfiguration)
+    public function __construct(DataLayerConfiguration $environmentConfiguration, ?string $defaultDriver = null)
     {
         $this->environmentConfiguration = $environmentConfiguration;
+        $this->currentDriver  = ($defaultDriver !=null) ? $defaultDriver : self::DEFAULT_DRIVER;
     }
 
     /**
-     * Checks credentials for validity
+     * Returns the base configuration as an array
      * 
-     * @param string $driver
-     * @return void
+     * @return array
      */
-    private function isCredentialsValid(string $driver) : void
+    public function getConfig() : array
     {
-        if (empty($driver) || !is_array($this->credentials)) {
-            throw new DataLayerInvalidArgumentException('Core Error: You have either not specify the default database driver or the database.yaml is returning null or empty.');
-        }
+        return $this->environmentConfiguration->baseConfiguration();
     }
 
     /**
@@ -49,20 +53,50 @@ class DataLayerEnvironment
      * 
      * @param string $driver
      * @return array
-     * @throws LiquidInvalidArgumentException
+     * @throws DataLayerInvalidArgumentException
      */
-    public function getDatabaseCredentials(string $driver) : array
+    public function getDatabaseCredentials() : array
     {
         $connectionArray = [];
-        $this->isCredentialsValid($driver);
-        foreach ($this->credentials as $credential) {
-            if (!array_key_exists($driver, $credential)) {
-                throw new DataLayerInvalidArgumentException('Core Error: Your selected database driver is not supported. Please see the database.yaml file for all support driver. Or specify a supported driver from your app.yaml configuration file');
+        foreach ($this->getConfig() as $credential) {    
+            if (!array_key_exists($this->currentDriver, $credential)) {
+                throw new DataLayerInvalidArgumentException('Unsupported database driver. ' . $this->currentDriver);
             } else {
-                $connectionArray = $credential[$driver];
+                $connectionArray = $credential[$this->currentDriver];
             }
         }
         return $connectionArray;
     }
+
+    /**
+     * Returns the currently selected database dsn connection string
+     * 
+     * @return string
+     */
+    public function getDsn() : string
+    {
+        return $this->getDatabaseCredentials($this->currentDriver)['dsn'];
+    }
+
+    /**
+     * Returns the currently selected database username from the connection string
+     * 
+     * @return string
+     */
+    public function getDbUsername() : string
+    {
+        return $this->getDatabaseCredentials($this->currentDriver)['username'];
+    }
+
+    /**
+     * Returns the currently selected database password from the connection string
+     * 
+     * @return string
+     */
+    public function getDbPassword() : string
+    {
+        return $this->getDatabaseCredentials($this->currentDriver)['password'];
+    }
+
 
 }

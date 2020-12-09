@@ -13,5 +13,5 @@ namespace MagmaDataLayer\Exception;
 
 use LogicException;
 
-class DataLayerNoValueException implements LogicException
+class DataLayerNoValueException extends LogicException
 {}
