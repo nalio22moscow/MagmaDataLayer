@@ -14,7 +14,7 @@ namespace MagmaDataLayer;
 use MagmaDataLayer\DataLayerEnvironment;
 use MagmaDataLayer\DataLayerConfiguration;
 
-final class DataLayerFacade
+class DataLayerFacade
 {
 
     /**

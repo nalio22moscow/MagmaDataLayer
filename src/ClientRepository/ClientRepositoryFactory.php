@@ -9,16 +9,15 @@
  */
 declare(strict_types=1);
 
-namespace MagmaDataLayer\DataRepository;
+namespace MagmaDataLayer\ClientRepository;
 
 use MagmaDataLayer\Exception\DataLayerUnexpectedValueException;
-use MagmaDataLayer\DataRepository\DataRepositoryInterface;
 use MagmaDataLayer\ClientRepository\ClientRepositoryInterface;
 use MagmaDataLayer\DataLayerEnvironment;
 use MagmaDataLayer\DataLayerConfiguration;
 use MagmaDataLayer\DataLayerFactory;
 
-class DataRepositoryFactory
+class ClientRepositoryFactory
 {
 
     /** @var string */
@@ -45,24 +44,23 @@ class DataRepositoryFactory
     }
 
     /**
-     * Create the DataRepository Object. Which is the middle layer that interacts with
-     * the application using this framework. The data repository object will have 
-     * the required dependency injected by default. Which is the data layer facade object
-     * which is simple passing in the entity manager object which expose the crud methods
+     * The client repository is a internal data layer which expose methods for internal
+     * and external library data consumption. It also provides method for puting and droping
+     * data from the client specified data entities.
      *
-     * @param string $dataRepositoryString
+     * @param string $ClientRepositoryString
      * @param array|null $dataLayerConfiguration
-     * @return DataRepositoryInterface
+     * @return ClientRepositoryInterface
      * @throws DataLayerUnexpectedValueException
      */
-    public function create(string $dataRepositoryString, ?array $dataLayerConfiguration = null) : DataRepositoryInterface
+    public function create(string $ClientRepositoryString, ?array $dataLayerConfiguration = null) : ClientRepositoryInterface
     {
         
-        $dataRepositoryObject = new $dataRepositoryString($this->entityBuilder($dataLayerConfiguration));
-        if (!$dataRepositoryObject instanceof DataRepositoryInterface ) {
-            throw new DataLayerUnexpectedValueException($dataRepositoryString . ' is not a valid repository object');
+        $clientRepositoryObject = new $ClientRepositoryString($this->entityBuilder($dataLayerConfiguration));
+        if (!$clientRepositoryObject instanceof ClientRepositoryInterface) {
+            throw new DataLayerUnexpectedValueException($ClientRepositoryString . ' is not a valid repository object');
         }
-        return $dataRepositoryObject;
+        return $clientRepositoryObject;
     }
 
     /**

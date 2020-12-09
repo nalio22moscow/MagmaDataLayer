@@ -13,7 +13,7 @@ namespace MagmaDataLayer\DataMapper;
 
 use MagmaDataLayer\Exception\DataLayerUnexpectedValueException;
 use MagmaDataLayer\DatabaseConnection\DatabaseConnectionInterface;
-use MagmaDataLayer\DataLayerConfiguration;
+use MagmaDataLayer\DataLayerEnvironment;
 
 class DataMapperFactory
 {
@@ -36,7 +36,7 @@ class DataMapperFactory
      * @return DataMapperInterface
      * @throws DataLayerUnexpectedValueException
      */
-    public function create(string $databaseConnectionString, Object $environment) : DataMapperInterface
+    public function create(string $databaseConnectionString, DataLayerEnvironment $environment) : DataMapperInterface
     {
         $databaseConnectionObject = new $databaseConnectionString($environment);
         if (!$databaseConnectionObject instanceof DatabaseConnectionInterface) {

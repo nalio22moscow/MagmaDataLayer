@@ -14,8 +14,8 @@ namespace MagmaDataLayer\DataRepository;
 use MagmaDataLayer\Exception\DataLayerInvalidArgumentException;
 use MagmaDataLayer\DataRepository\DataRepositoryInterface;
 use MagmaDataLayer\EntityManager\EntityManagerInterface;
-//se MagmaDataLayer\Utility\Paginator;
-//use MagmaDataLayer\Utility\Sortable;
+use MagmaUtils\Paginator\Paginator;
+use MagmaUtils\Sortable\Sortable;
 use Throwable;
 
 class DataRepository implements DataRepositoryInterface
