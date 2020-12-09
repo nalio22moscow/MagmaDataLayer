@@ -23,6 +23,9 @@ final class DataLayerFacade
      * the relevant parameters/arguments. ie the query builder factory, entity manager
      * factory and the data mapper factory.
      * 
+     * Application can pass in their own configuration which must be an array. using this 
+     * $options argument this will override the default configuration which is set by default.
+     * 
      * In order for the data repository to work as a middle man for the client application
      * this facade object is passed in by default to the data repository object which is located
      * within the data repository directory and data repository factory class
@@ -38,10 +41,10 @@ final class DataLayerFacade
      *                  easier operation within the client application by exposing 
      *                  methods like find(), findBy(), findOneObject() etc..
      */
-    public function __construct(string $tableSchema, string $tableSchemaID, ?array $options = null)
+    public function __construct(string $tableSchema, string $tableSchemaID, ?array $dataLayerConfiguration = null)
     {
-        $dataLayerEnvironment = new DataLayerEnvironment(new DataLayerConfiguration());
-        $factory = new DataLayerFactory($dataLayerEnvironment, $tableSchema, $tableSchemaID, $options);
+        $dataLayerEnvironment = new DataLayerEnvironment(new DataLayerConfiguration(($dataLayerConfiguration !=null) ? $dataLayerConfiguration : (new DataLayerConfiguration())->baseConfiguration()));
+        $factory = new DataLayerFactory($dataLayerEnvironment, $tableSchema, $tableSchemaID);
         if ($factory) {
             return $factory->initialize();
         }

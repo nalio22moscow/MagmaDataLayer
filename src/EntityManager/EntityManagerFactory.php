@@ -47,9 +47,9 @@ class EntityManagerFactory
      * @return EntityManagerInterface
      * @throws BaseUnexpectedValueException
      */
-    public function create(string $crudString, string $tableSchema, string $tableSchemaID, array $options = []) : EntityManagerInterface
+    public function create(string $crudString, string $tableSchema, string $tableSchemaID) : EntityManagerInterface
     {
-        $crudObject = new $crudString($this->dataMapper, $this->queryBuilder, $tableSchema, $tableSchemaID, $options);
+        $crudObject = new $crudString($this->dataMapper, $this->queryBuilder, $tableSchema, $tableSchemaID);
         if (!$crudObject instanceof CrudInterface) {
             throw new DataLayerUnexpectedValueException($crudString . ' is not a valid crud object.');
         }

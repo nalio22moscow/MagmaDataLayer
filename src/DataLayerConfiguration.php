@@ -14,7 +14,7 @@ namespace MagmaDataLayer;
 class DataLayerConfiguration
 {
 
-    public function __construct()
+    public function baseConfiguration() : array
     {
         return [
 

@@ -27,9 +27,6 @@ class DataLayerFactory
     /** @var string */
     protected string $tableSchemaID;
 
-    /** @var array */
-    protected array $options;
-
     /** @var DataLayerEnvironment */
     protected DataLayerEnvironment $environment;
 
@@ -41,12 +38,11 @@ class DataLayerFactory
      * @param string $tableSchemaID
      * @param array|null $options
      */
-    public function __construct(DataLayerEnvironment $environment, string $tableSchema, string $tableSchemaID, ?array $options = [])
+    public function __construct(DataLayerEnvironment $environment, string $tableSchema, string $tableSchemaID)
     {
         $this->environment = $environment;
         $this->tableSchema = $tableSchema;
         $this->tableSchemaID = $tableSchemaID;
-        $this->options = $options;
     }
 
     /**
@@ -67,7 +63,7 @@ class DataLayerFactory
             if ($queryBuilder) {
                 /* Initialize the entity manager factory object */
                 $entityManagerFactory = new EntityManagerFactory($dataMapper, $queryBuilder);
-                return $entityManagerFactory->create(Crud::class, $this->tableSchema, $this->tableSchemaID, $this->options);
+                return $entityManagerFactory->create(Crud::class, $this->tableSchema, $this->tableSchemaID);
             }
         }
     }
