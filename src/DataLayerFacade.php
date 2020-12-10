@@ -11,11 +11,14 @@ declare(strict_types=1);
 
 namespace MagmaDataLayer;
 
-use MagmaDataLayer\DataLayerEnvironment;
-use MagmaDataLayer\DataLayerConfiguration;
+use MagmaDataLayer\ClientRepository\ClientRepositoryFactory;
 
 class DataLayerFacade
 {
+
+    protected string $clientIdentifier;
+    protected string $tableSchema;
+    protected string $tableSchemaID;
 
     /**
      * Final class which ties the entire data layer togther. The data layer factory
@@ -23,31 +26,32 @@ class DataLayerFacade
      * the relevant parameters/arguments. ie the query builder factory, entity manager
      * factory and the data mapper factory.
      * 
-     * Application can pass in their own configuration which must be an array. using this 
-     * $options argument this will override the default configuration which is set by default.
-     * 
-     * In order for the data repository to work as a middle man for the client application
-     * this facade object is passed in by default to the data repository object which is located
-     * within the data repository directory and data repository factory class
-     * 
+     * @param string $clientIdentifier
      * @param string $tableSchema
-     * @param $tableSchemaID
-     * @param null|array $options
-     * @return Object - this is effectively making the entity manager which 
-     *                  ultimately gives us database access
-     *                  through the crud object. and this is the reason why 
-     *                  this needs to be passed to the data repository as the 
-     *                  object uses the crud methods to build an extra layer for
-     *                  easier operation within the client application by exposing 
-     *                  methods like find(), findBy(), findOneObject() etc..
+     * @param string $tableSchemaID
+     * @return ClientRepository
      */
-    public function __construct(string $tableSchema, string $tableSchemaID, ?array $dataLayerConfiguration = null)
+    public function __construct(string $clientIdentifier, string $tableSchema, string $tableSchemaID) 
+    {        
+        $this->clientIdentifier = $clientIdentifier;
+        $this->tableSchema = $tableSchema;
+        $this->tableSchemaID = $tableSchemaID;
+    }
+
+    /**
+     * Returns the client repository object which allows external and internal 
+     * component to use the methods within.
+     *
+     * @return Object
+     */
+    public function getClientRepository() : Object
     {
-        $dataLayerEnvironment = new DataLayerEnvironment(new DataLayerConfiguration(($dataLayerConfiguration !=null) ? $dataLayerConfiguration : (new DataLayerConfiguration())->baseConfiguration()));
-        
-        $factory = new DataLayerFactory($dataLayerEnvironment, $tableSchema, $tableSchemaID);
+        $factory = new ClientRepositoryFactory($this->clientIdentifier, $this->tableSchema, $this->tableSchemaID);
         if ($factory) {
-            return $factory->build();
+            $client = $factory->create(\MagmaDataLayer\ClientRepository\ClientRepository::class);
+            if ($client) {
+                return $client;
+            }
         }
 
     }
