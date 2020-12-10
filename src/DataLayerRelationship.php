@@ -11,8 +11,12 @@ declare(strict_types=1);
 
 namespace MagmaDataLayer;
 
+use MagmaDataLayer\DataLayerTrait;
+
 class DataLayerRelationship extends DataLayerCollection
 {
+
+    use DataLayerTrait;
 
     /** @var string */
     protected const IDENTIFIER = 'relationships';
@@ -101,7 +105,7 @@ class DataLayerRelationship extends DataLayerCollection
                 if ($item) {
                     $storedCollection = $this->model->getRepo()->findBy();
                     $itemName = array_map('intval', $item);
-                    $flat = $this->flattenArray($storedCollection);
+                    $flat = $this->flattenArrayRecursive($storedCollection);
                     if ($flat != false) {
                         $newItems = array_diff($itemName, $flat);
                     } else {
@@ -112,18 +116,15 @@ class DataLayerRelationship extends DataLayerCollection
                         $additionalItems = (array)$this->get($index);
                         if ($this->count()) {
                             foreach ($additionalItems as $additionalItem) {
-                                (new DataLayerFacade(
-                                    self::IDENTIFIER, 
-                                    $relatedTo::TABLESCHEMA, 
-                                    $relatedTo::TABLESCHEMAID))
-                                    ->getClientRepository()
-                                    ->validate()
-                                    ->save(
-                                    [
-                                        $condition,
-                                        $this->relatedKey = $additionalItem
-                                    ]
-                                );    
+                                (new DataLayerFacade(self::IDENTIFIER, $relatedTo::TABLESCHEMA, $relatedTo::TABLESCHEMAID))
+                                ->getClientRepository()
+                                ->validate()
+                                ->save(
+                                [
+                                    $condition,
+                                    $this->relatedKey = $additionalItem
+                                ]
+                            );
                             }
                         }
                     } else {
