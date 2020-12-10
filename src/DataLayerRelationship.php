@@ -59,10 +59,7 @@ class DataLayerRelationship extends DataLayerCollection
                     $newItems = (array)$this->get($index);
                     if ($this->count()) {
                         for ($i=0; $i < count($newItems); $i++) {
-                            (new DataLayerFacade(
-                                self::IDENTIFIER, 
-                                $relatedTo::TABLESCHEMA, 
-                                $relatedTo::TABLESCHEMAID))
+                            (new DataLayerFacade(self::IDENTIFIER, $relatedTo::TABLESCHEMA, $relatedTo::TABLESCHEMAID))
                                 ->getClientRepository()
                                 ->validate()
                                 ->save(
